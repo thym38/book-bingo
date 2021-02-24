@@ -1,0 +1,17 @@
+.banner {
+    background:#7db58e url(./banner.jpg?width=4000&amp;format=pjpg&amp;) repeat center top;
+    background-position:center top;
+    height:128px;
+    display:block;
+    flex-direction:row;
+    margin:0 auto; 
+    min-width:260px;
+    top: 0;
+}
+
+h1 {
+    font-size: xx-large;
+    text-align: center;
+    padding-top: 1.2em;
+    color: #F1F8F1;
+}
