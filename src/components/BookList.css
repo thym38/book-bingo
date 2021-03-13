@@ -1,0 +1,24 @@
+.menu_item {
+    min-height: 60px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(0, 0, 0, 0.22);
+}
+
+.menu_item:hover{
+    background-color: lightgray;
+}
+
+.scrollTime2 {
+    overflow-y: scroll;
+    max-height: 55vh;
+}
+
+/* make scrollbar invisible */
+::-webkit-scrollbar {
+    width:0;
+    background:transparent;
+}
+
+span {
+    display: block;
+}

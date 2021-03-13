@@ -7,7 +7,6 @@
   pointer-events: none;
 }
 
-
 .App-header {
   background-color: #1E3133;
   min-height: 100vh;
@@ -19,31 +18,68 @@
   color: #F1F8F1;
 }
 
-.Flipcard {
-  height:100%;
-  width: 100%;
-  position:relative;
-  /* height: 200px;
-  width:200px; */
-  display: inline-block;
-}
 
-.Flipcard-front {
-  background-color: #7db58e;
-}
+/* -------------------- FLIPCARD STYLES --------------------- */
 
+/* create grid for the cards depending on screen size */
+/* https://css-tricks.com/snippets/css/complete-guide-grid/ */
 .grid-container {
   width: 90%;
   height: 1150px;
-  /* padding: 5%; */
   display: inline-grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   justify-items: right;
   align-items: top;
   justify-content: space-evenly; 
-  /* gap: 230px; */
   grid-template-rows: repeat(5, 1fr);
-  /* position: fixed; */
-  /* grid-auto-columns: 300px; */
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    max-height: 580px;
+  }
+}
+
+/* make sure cards fill grid spaces */
+.Flipcard-flipper {
+  height:100%;
+  width:100%;
+}
+
+/* card background colour */
+.Flipcard-back, 
+.Flipcard-front  {
+  background-color: #7db58e;
+  height:100%;
+  width:100%;
+}
+
+.flipcard{
+  text-align: center;
+  height:200px;
+  line-height: 200px;
+  overflow: hidden;
+}
+
+.covers {
+  display: inline-block;
+  vertical-align: middle;
+  height:222px;
+}
+
+.description {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  margin: 10px;
+}
+
+.goButton {
+  display:inline-block;
+  margin-top:-6px;
 }
