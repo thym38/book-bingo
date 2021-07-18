@@ -304,7 +304,7 @@ class App extends Component  {
             </div>
           </InfoBox>
           
-          <img class="info" src="iconmonstr-info-6.svg" onClick={e=> this.info_window()}/>
+          <img className="info" src="iconmonstr-info-6.svg" onClick={e=> this.info_window()}/>
 
         </header>
       </div>

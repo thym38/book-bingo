@@ -12,7 +12,7 @@ export default class BookList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: "http://openlibrary.org/search.json?title=$",
+            url: "https://openlibrary.org/search.json?title=$",
             // url: "http://openlibrary.org/api/search?q=",
             books: [],
             search: this.props.search, 
@@ -76,7 +76,7 @@ export default class BookList extends Component {
         {this.state.books.slice(0,10).map(
             book => {
               if (book.isbn) {
-                const cover = "http://covers.openlibrary.org/b/isbn/".concat(book.isbn[0], "-L.jpg");
+                const cover = "https://covers.openlibrary.org/b/isbn/".concat(book.isbn[0], "-L.jpg");
                 return <div key={book.isbn[0]} className={'menu_item'} onClick={e => this.props.handleBookSelect(this.state.currentCard, cover)}>
                   <span>{book.title}</span>
                   <br/>
