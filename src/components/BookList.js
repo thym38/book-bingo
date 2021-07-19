@@ -65,8 +65,7 @@ export default class BookList extends Component {
           .then(res => {
             const books = res.data.docs;
             this.setState({ books: books });
-            console.log("received");
-            console.log(res);
+            console.log("received", res);
           })
     }
     
@@ -77,10 +76,13 @@ export default class BookList extends Component {
             book => {
               if (book.isbn) {
                 const cover = "https://covers.openlibrary.org/b/isbn/".concat(book.isbn[0], "-L.jpg");
-                return <div key={book.isbn[0]} className={'menu_item'} onClick={e => this.props.handleBookSelect(this.state.currentCard, cover)}>
-                  <span>{book.title}</span>
+                const author = book.author_name?book.author_name.map(name => name.concat(", ")):'';
+                const title = book.title;
+                return <div key={book.isbn[0]} className={'menu_item'} onClick={e => this.props.handleBookSelect(this.state.currentCard, cover, author, title)}>
+                  <span>{title}</span>
                   <br/>
-                  <span>{book.author_name?book.author_name.map(name => name.concat(", ")):''}</span>
+                  {/* <span>{book.author_name?book.author_name.map(name => name.concat(", ")):''}</span> */}
+                  <span>{author}</span>
                   <img src={cover} style={{'height':'50px'}}/>
                   {/* {book} */}
                 </div>

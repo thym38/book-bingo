@@ -4,8 +4,13 @@ import { withCookies, Cookies } from 'react-cookie';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
+
 import './App.css';
 import BookList from './components/BookList';
+import MyDocument from './components/Document';
 
 import Modal from 'react-overlays/Modal';
 import styled from 'styled-components';
@@ -28,6 +33,8 @@ let info_text = require('./resources/info_text.json');
 // https://levelup.gitconnected.com/building-a-simple-dynamic-search-bar-in-react-js-f1659d64dfae
 // https://github.com/amydegenaro/great-reads/blob/84b6bc48fa712e8562a60f7327ca5a6e48fc03bc/client/store/index.js#L59
 // https://www.npmjs.com/package/react-cookie
+
+// HEROKU: https://github.com/mars/create-react-app-buildpack#usage
 
 const isChrome = !!window.chrome;
 
@@ -103,6 +110,8 @@ class App extends Component  {
     this.state = {
       // use cookies to store book cover images
       images: cookies.get('images') || Array(25).fill(''),
+      authors: cookies.get('authors') || Array(25).fill(''),
+      titles: cookies.get('titles') || Array(25).fill(''),
       // flipped: Array(25).fill(false), // initialise 5x5 1D array of zeroes
       flipped: cookies.get('images') ? cookies.get('images').map(e=>e===''?false:true) : Array(25).fill(false),
       search: "",
@@ -112,9 +121,10 @@ class App extends Component  {
       buttonClicked: false,
       currentCard: 0,
       touch: null,
+      clicked: false,
 
       // test cookie
-      name: cookies.get('clicked') || 'Ben'
+      // name: cookies.get('clicked') || 'Ben'
     }
   }
 
@@ -146,10 +156,19 @@ class App extends Component  {
     if (this.state.images !== nextState.images) {
       return true
     }
+    if (this.state.authors !== nextState.authors) {
+      return true
+    }
+    if (this.state.titles !== nextState.titles) {
+      return true
+    }
     if (this.state.buttonClicked !== nextState.buttonClicked) {
       return true
     }
     if (this.state.touch !== nextState.touch) {
+      return true
+    }
+    if (this.state.clicked !== nextState.clicked) {
       return true
     }
     return false;
@@ -160,7 +179,7 @@ class App extends Component  {
     if (this.checkIfBookAdded(index)) {
       let old = this.state.flipped;
       let newFlipped = old.slice(0,index).concat([!this.state.flipped[index]]).concat(old.slice(index+1));
-      this.setState({flipped: newFlipped}, e=>console.log("flipped"));
+      this.setState({flipped: newFlipped});
     }
   }
 
@@ -180,7 +199,7 @@ class App extends Component  {
 
   addBook(index) {
     this.setState({show: true, currentCard: index})
-    this.handleNameChange("clicked");
+    // this.handleNameChange("clicked");
   }
 
   tap() {
@@ -206,37 +225,44 @@ class App extends Component  {
     this.setState({buttonClicked: !(this.state.buttonClicked)})
   }
 
-  handleBookSelect(index, link) {
+  handleBookSelect(index, cover_link, author, title) {
     const { cookies } = this.props;
 
     let old = this.state.images;
-    let newImages= old.slice(0,index).concat([link]).concat(old.slice(index+1));
+    let newImages = old.slice(0,index).concat([cover_link]).concat(old.slice(index+1));
+
+    old = this.state.authors;
+    let newAuthors = old.slice(0,index).concat([author]).concat(old.slice(index+1));
+
+    old = this.state.titles;
+    let newTitles = old.slice(0,index).concat([title]).concat(old.slice(index+1));
 
     cookies.set('images', newImages, { path: '/' });
+    cookies.set('authors', newAuthors, { path: '/' });
+    cookies.set('titles', newTitles, { path: '/' });
 
     // make front of card (description) the back after a book cover is added
     if (!this.checkIfBookAdded(index)){
       let oldFlip = this.state.flipped;
       let newFlipped = oldFlip.slice(0,index).concat([!this.state.flipped[index]]).concat(oldFlip.slice(index+1));
     
-      this.setState({images: newImages, show: false, flipped: newFlipped})
+      this.setState({flipped: newFlipped})
     }
 
-    this.setState({images: newImages, show: false})
+    this.setState({images: newImages, authors: newAuthors, titles: newTitles, show: false})
   }
 
-  handleNameChange(name) {
-    const { cookies } = this.props;
+  // handleNameChange(name) {
+  //   const { cookies } = this.props;
  
-    cookies.set('name', name, { path: '/' });
-    this.setState({ name });
-  }
+  //   cookies.set('name', name, { path: '/' });
+  //   this.setState({ name });
+  //   console.log(this.state)
+  // }
 
   info_window() {
-    console.log("info");
     this.setState({show_info:true});
 }
-
 
   render () {
     return (
@@ -300,11 +326,31 @@ class App extends Component  {
               renderBackdrop={e=><Backdrop {...e}/>}
           >
             <div>
-             {info_text.map(line => {return (<p>{line}</p>)})}
+              <p></p>
+              <h2>Bingo Rules</h2>
+              {info_text.map(line => {return (<p>{line}</p>)})}
+              <span className={'line'}>Visit the </span>
+              <a className={'line'} href="https://www.reddit.com/r/Fantasy/comments/mhz2tt/official_rfantasy_2021_book_bingo_challenge/" target="_blank">r/fantasy</a>
+              <span className={'line'}> challenge page for more information</span> <br/><br/>
+              <span className={'line'}>Created by Emma Herbold 2021&emsp;</span>
+              <a className={'line'} href="mailto:emmaherbold@mail.com">Contact</a>
+              <p className={'line'}>&emsp;</p>
+              <a className={'line'} href="https://github.com/eher0002/book-bingo" target="_blank">GitHub</a>
             </div>
           </InfoBox>
+
+          <PDFDownloadLink document={<MyDocument clicked={this.state.clicked} images={this.state.images} authors={this.state.authors} titles={this.state.titles}/>} fileName="BingoCard.pdf">
+            {({ blob, url, loading, error }) =>
+              loading ? 'Loading document...' : <img className="download" title="download" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/>
+              // <Button onClick={e=> this.setState({clicked:true})} className={'goButton'}>Download as PDF</Button>
+            }
+          </PDFDownloadLink>
+
+          {/* https://iconmonstr.com/download-17-svg/ */}
+          {/* <img className="download" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/> */}
           
-          <img className="info" src="iconmonstr-info-6.svg" onClick={e=> this.info_window()}/>
+          {/* https://iconmonstr.com/info-6-svg/ */}
+          <img className="info" title="info" src="iconmonstr-info-6.svg" onClick={e=> this.info_window()}/>
 
         </header>
       </div>
