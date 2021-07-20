@@ -18,6 +18,52 @@
   color: #F1F8F1;
 }
 
+.info {
+  filter: invert(100%) sepia(1%) saturate(1958%) hue-rotate(49deg) brightness(99%) contrast(96%);
+  position: absolute;
+  /* bottom: 10px; */
+  top: 0;
+  top: 98px;
+  right: 84px;
+  cursor: pointer;
+}
+
+.download {
+  filter: invert(100%) sepia(1%) saturate(1958%) hue-rotate(49deg) brightness(99%) contrast(96%);
+  position: absolute;
+  /* bottom: 84px; */
+  top: 98px;
+  right: 48px;
+}
+
+.help {
+  filter: invert(100%) sepia(1%) saturate(1958%) hue-rotate(49deg) brightness(99%) contrast(96%);
+  position: absolute;
+  /* bottom: 46px; */
+  top: 98px;
+  right: 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .info {
+    height: 16px;
+    top: 108px;
+    right: 56px;
+  }
+
+  .download {
+    height: 16px;
+    top: 108px;
+    right: 32px;
+  }
+
+  .help {
+    height: 16px;
+    top: 108px;
+    right: 8px;
+  }
+}
 
 /* -------------------- FLIPCARD STYLES --------------------- */
 
@@ -35,13 +81,14 @@
   grid-template-rows: repeat(5, 1fr);
   padding-top: 10px;
   padding-bottom: 10px;
-
-  
 }
 
-@media (max-width: 768px) {
+/* handle mobile - show 2 card per row for 13 rows */
+@media (max-width: 760px) {
   .grid-container {
-    max-height: 580px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(13, 1fr);
+    height:2750px;
   }
 }
 
@@ -51,12 +98,18 @@
   width:100%;
 }
 
+.flipcard_cover {
+  height:100%;
+  width:100%;
+} 
+
 /* card background colour */
 .Flipcard-back, 
 .Flipcard-front  {
   background-color: #7db58e;
   height:100%;
   width:100%;
+  user-select: none;
 }
 
 .flipcard{
@@ -65,6 +118,7 @@
   line-height: 200px;
   overflow: hidden;
   vertical-align: middle;
+  user-select: none;
 }
 
 .covers {
@@ -82,26 +136,21 @@
   -webkit-touch-callout: none;
 }
 
+/* search button */
 .goButton {
   display:inline-block;
   margin-top:-6px;
+  background-color: #7db58e;
+  border-color: #1E3133;
+  color: #F1F8F1;
 }
 
-.info {
-  filter: invert(100%) sepia(0%) saturate(7475%) hue-rotate(137deg) brightness(119%) contrast(90%);
-  position: fixed;
-  bottom: 10px;
-  right: 8px;
-  cursor: pointer;
+.goButton:hover{
+  background-color: #84C485;
+  border-color: #1E3133;
 }
 
-.download {
-  filter: invert(100%) sepia(0%) saturate(7475%) hue-rotate(137deg) brightness(119%) contrast(90%);
-  position: fixed;
-  bottom: 46px;
-  right: 8px;
-}
-
+/* display any text/link elements on same line */
 .line {
   display: inline;
 }

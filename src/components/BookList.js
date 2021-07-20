@@ -76,7 +76,7 @@ export default class BookList extends Component {
             book => {
               if (book.isbn) {
                 const cover = "https://covers.openlibrary.org/b/isbn/".concat(book.isbn[0], "-L.jpg");
-                const author = book.author_name?book.author_name.map(name => name.concat(", ")):'';
+                const author = book.author_name?book.author_name.join(', '):'';
                 const title = book.title;
                 return <div key={book.isbn[0]} className={'menu_item'} onClick={e => this.props.handleBookSelect(this.state.currentCard, cover, author, title)}>
                   <span>{title}</span>

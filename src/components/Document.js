@@ -44,8 +44,9 @@ const styles = StyleSheet.create({
     }, 
     tableCell: { 
       margin: "auto", 
-      marginTop: 5, 
-      fontSize: 10,
+      padding: 3,
+      fontSize: 8,
+      textAlign: 'center',
     },
     title: {
       fontSize: 24,
@@ -99,7 +100,7 @@ const MyDocument = ({clicked, images, authors, titles}) => {
             {/* <Image style={styles.banner} src='https://styles.redditmedia.com/t5_2qknd/styles/bannerBackgroundImage_ea8oj3m43q101.jpg'/> */}
 
                 <Image style={styles.logo} src='https://i.imgur.com/IDNH5yu.jpg'/>
-                <Text style={styles.title}>r/Fantasy 2021 Book Bingo Challenge</Text> 
+                <Text style={styles.title}>r/Fantasy Book Bingo Challenge 2021</Text> 
             </View>
             
             
@@ -110,14 +111,14 @@ const MyDocument = ({clicked, images, authors, titles}) => {
                     {[0,1,2,3,4].map(col => {
                         let cell = row*5 + col;
                         return (images[cell] === '') ? 
-                            <View style={styles.tableCol}> 
+                            <View style={styles.tableCol} key={cell}> 
                                 <Text style={styles.tableCell}>{titles[cell]}</Text> 
                                 <Text style={styles.tableCell}>{authors[cell]}</Text> 
                             </View> :
-                            <View style={styles.tableCol}> 
-                                <Text style={styles.tableCell}>{titles[cell]}</Text> 
-                                <Text style={styles.tableCell}>{authors[cell]}</Text> 
-                                <Image src={images[cell]} style={[styles.tableCell, { height: '30mm'}]}/>
+                            <View style={styles.tableCol} key={cell}> 
+                                <Text style={[styles.tableCell, {margin: "5px 5px 0px 5px"}]}>{titles[cell]}</Text> 
+                                <Text style={[styles.tableCell, {margin: "0px 5px 0px 5px"}]}>{authors[cell]}</Text> 
+                                <Image src={images[cell]} style={[styles.tableCell, { height: '30mm', width:'20mm'}]}/>
                             </View>
                     })}
                 </View>

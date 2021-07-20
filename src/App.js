@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import CookieConsent from "react-cookie-consent";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
@@ -11,6 +13,8 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import './App.css';
 import BookList from './components/BookList';
 import MyDocument from './components/Document';
+import EventHandler from './components/EventsHandler';
+import FlipcardWithEventsHandler from './components/FlipcardWithEventsHandler';
 
 import Modal from 'react-overlays/Modal';
 import styled from 'styled-components';
@@ -35,6 +39,14 @@ let info_text = require('./resources/info_text.json');
 // https://www.npmjs.com/package/react-cookie
 
 // HEROKU: https://github.com/mars/create-react-app-buildpack#usage
+
+const Thing = ({events}) => (
+  <div {...events} style={{height: 100, background:"green"}}><button style={{height: 50,background:"white"}}>click</button></div>
+);
+
+const Invisible = ({events}) => (
+  <div {...events} className={'flipcard_cover'}></div>
+);
 
 const isChrome = !!window.chrome;
 
@@ -112,27 +124,20 @@ class App extends Component  {
       images: cookies.get('images') || Array(25).fill(''),
       authors: cookies.get('authors') || Array(25).fill(''),
       titles: cookies.get('titles') || Array(25).fill(''),
+
       // flipped: Array(25).fill(false), // initialise 5x5 1D array of zeroes
       flipped: cookies.get('images') ? cookies.get('images').map(e=>e===''?false:true) : Array(25).fill(false),
       search: "",
       show: false,
       show_info: false,
+      show_help: false,
       
       buttonClicked: false,
       currentCard: 0,
       touch: null,
       clicked: false,
-
-      // test cookie
-      // name: cookies.get('clicked') || 'Ben'
     }
   }
-
-  // componentWillMount() {
-  //   // make sure cards with cover images stored in cookies are flipped once page loads
-  //   this.setState({flipped: this.state.images.map(e=>e===''?false:true)})
-  //   console.log(this.state.flipped, this.state.images)
-  // }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     if (this.props.search !== nextProps.search) {
@@ -151,6 +156,9 @@ class App extends Component  {
       return true
     }
     if (this.state.show_info !== nextState.show_info) {
+      return true
+    }
+    if (this.state.show_help !== nextState.show_help) {
       return true
     }
     if (this.state.images !== nextState.images) {
@@ -197,9 +205,33 @@ class App extends Component  {
     }
   }
 
+  eventsHandler(eventType, index) {
+    // console.log(eventType);
+
+    if (eventType === 'touchend_short') {
+      this.addBook(index);
+      console.log(eventType);
+    }
+    if (eventType === 'touchend_long') {
+      this.flipper(index);
+      console.log(eventType);
+    }
+    if (eventType === 'mouseenter' || eventType === 'pointerleave') {
+      this.flipper(index);
+      console.log(eventType);
+    }
+    if (eventType === 'mouseleave' & (!isChrome)) {
+      this.flipper(index);
+      console.log(eventType);
+    }
+    if (eventType === 'mousedown') {
+      this.addBook(index);
+      console.log(eventType);
+    }
+  }
+
   addBook(index) {
     this.setState({show: true, currentCard: index})
-    // this.handleNameChange("clicked");
   }
 
   tap() {
@@ -207,13 +239,14 @@ class App extends Component  {
   }
 
   handleTouchscreen(e, index) {
-    e.nativeEvent.preventDefault()
-    if (Date.now()-this.state.touch > 150) {
-      console.log("long");
-      this.addBook(index);
-    } else {
-      console.log("short");
+    e.stopPropagation();
+    e.preventDefault();
+    if ((Date.now()-this.state.touch) > 150) {
+      // console.log("long - flip", Date.now(), this.state.touch, Date.now()-this.state.touch);
       this.flipper(index);
+    } else {
+      // console.log("short - add book", Date.now(), this.state.touch, Date.now()-this.state.touch);
+      this.addBook(index);
     }
   }
 
@@ -252,18 +285,6 @@ class App extends Component  {
     this.setState({images: newImages, authors: newAuthors, titles: newTitles, show: false})
   }
 
-  // handleNameChange(name) {
-  //   const { cookies } = this.props;
- 
-  //   cookies.set('name', name, { path: '/' });
-  //   this.setState({ name });
-  //   console.log(this.state)
-  // }
-
-  info_window() {
-    this.setState({show_info:true});
-}
-
   render () {
     return (
       <div className="App">
@@ -272,28 +293,19 @@ class App extends Component  {
           <div className={'grid-container'}>
             { headings.map(book => {
               let key = parseInt(book.slice(0,2))-1;
-              return <Flipcard 
-                        key={key} 
-                        className={'item'} 
-                        onMouseEnter={e=>this.flipper(key)} 
-                        onPointerLeave={e=>this.flipper(key)} 
-                        onMouseLeave={e=>this.non_chrome_flipper(key)} 
-                        onMouseDown={e=>this.addBook(key)}
-                        // onClick={e=> this.addBook(key)}
-                        onTouchStart={e=>this.tap()}
-                        onTouchEnd={e=>this.handleTouchscreen(e,key)}
-                        flipped={this.state.flipped[key]}>
-                  <div className={'flipcard'}><span className={"description"}>{book.slice(2)}</span></div>
-                  <div className={'flipcard'}>
-                    {this.state.images[key] !== '' ? <img className={"covers"} src={this.state.images[key]}/> : ''}
-                  </div>
-                </Flipcard>
-            })}
+              return <EventHandler handleAction={e=>this.eventsHandler(e, key)}>
+                {(events) => (<FlipcardWithEventsHandler 
+                                      events={events} 
+                                      key={key} 
+                                      flipped={this.state.flipped[key]} 
+                                      book={book.slice(2)} 
+                                      image={this.state.images[key]} >
+                              </FlipcardWithEventsHandler>)}
+                </EventHandler>})}
           </div>
 
-          {/* <BookList/> */}
-
           <SearchBox
+            key={'search'}
             show={this.state.show}
             onHide={() => this.setState({show: false})}
             aria-labelledby="modal-label"
@@ -320,6 +332,7 @@ class App extends Component  {
           </SearchBox>
 
           <InfoBox
+              key={'info'}
               show={this.state.show_info}
               onHide={() => this.setState({show_info: false})}
               aria-labelledby="modal-label"
@@ -331,26 +344,59 @@ class App extends Component  {
               {info_text.map(line => {return (<p>{line}</p>)})}
               <span className={'line'}>Visit the </span>
               <a className={'line'} href="https://www.reddit.com/r/Fantasy/comments/mhz2tt/official_rfantasy_2021_book_bingo_challenge/" target="_blank">r/fantasy</a>
-              <span className={'line'}> challenge page for more information</span> <br/><br/>
-              <span className={'line'}>Created by Emma Herbold 2021&emsp;</span>
-              <a className={'line'} href="mailto:emmaherbold@mail.com">Contact</a>
-              <p className={'line'}>&emsp;</p>
-              <a className={'line'} href="https://github.com/eher0002/book-bingo" target="_blank">GitHub</a>
+              <span className={'line'}> challenge page for more information.</span> <br/><br/>
             </div>
           </InfoBox>
 
+          <InfoBox
+              show={this.state.show_help}
+              onHide={() => this.setState({show_help: false})}
+              aria-labelledby="modal-label"
+              renderBackdrop={e=><Backdrop {...e}/>}
+          >
+            <div>
+              <p></p>
+              <span>Can't find the book you're looking for? </span> <br/>
+              <span className={'line'}>Create an Open Library account and </span>
+              <a className={'line'} href='https://openlibrary.org/books/add'>add</a>
+              <span className={'line'}> add it to their database. Open Library is a non-profit virtual library empowering universal access to all knowledge.</span> <br/><br/>
+              
+              <span className={'line'}>This React Webapp was created by Emma Herbold (2021).&emsp;</span>
+              <a className={'line'} href="mailto:emmaherbold@mail.com">Contact</a>
+              <p className={'line'}>&emsp;</p>
+              <a className={'line'} href="https://github.com/eher0002/book-bingo" target="_blank">GitHub</a> <br/><br/>
+              <p className={'line'}>Book information courtesy of </p>
+              <a className={'line'} href='https://openlibrary.org/'>https://openlibrary.org/</a><br/><br/>
+              
+              <span>Not sponsored, they just strive for a great cause ;)</span>
+            </div>
+          </InfoBox>
+
+          {/* https://iconmonstr.com/download-17-svg/ */}
           <PDFDownloadLink document={<MyDocument clicked={this.state.clicked} images={this.state.images} authors={this.state.authors} titles={this.state.titles}/>} fileName="BingoCard.pdf">
             {({ blob, url, loading, error }) =>
               loading ? 'Loading document...' : <img className="download" title="download" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/>
-              // <Button onClick={e=> this.setState({clicked:true})} className={'goButton'}>Download as PDF</Button>
             }
           </PDFDownloadLink>
 
-          {/* https://iconmonstr.com/download-17-svg/ */}
-          {/* <img className="download" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/> */}
+          {/* https://iconmonstr.com/help-3-svg/ */}
+          <img className="help" title="help" src="iconmonstr-help-3.svg" onClick={e=> this.setState({show_help:true})}/>
           
           {/* https://iconmonstr.com/info-6-svg/ */}
-          <img className="info" title="info" src="iconmonstr-info-6.svg" onClick={e=> this.info_window()}/>
+          <img className="info" title="info" src="iconmonstr-info-6.svg" onClick={e=> this.setState({show_info:true})}/>
+
+
+          <CookieConsent
+            location="bottom"
+            buttonText="Accept"
+            cookieName="cookieConsent"
+            style={{ color: "#7db58e", fontWeight: "bold", background: "#F1F8F1" }}
+            buttonStyle={{ color: "#F1F8F1", fontWeight: "bold", background: "#7db58e", fontSize: "16px"}}
+            expires={150}
+            // debug={true}
+          >
+            This website uses cookies to remember your read books.
+          </CookieConsent>
 
         </header>
       </div>
