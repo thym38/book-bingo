@@ -1,9 +1,9 @@
-// CUSTOMER MOUSE / TOUCH EVENTS HANDLER
+// CUSTOM MOUSE / TOUCH EVENTS HANDLER
 // based on react-touch-mouse-handler by seleckis
 // https://github.com/seleckis/react-touch-mouse-handler/blob/master/src/index.js
 
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import {Component} from 'react';
+import PropTypes from 'prop-types';
 
 export default class EventsHandler extends Component {
     static propTypes = {

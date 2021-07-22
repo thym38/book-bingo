@@ -22,6 +22,7 @@
     "react-dom": "^17.0.1",
     "react-overlays": "^5.1.1",
     "react-scripts": "^4.0.2",
+    "serve": "^12.0.0",
     "styled-components": "^5.3.0",
     "web-vitals": "^1.1.0"
   },
@@ -48,5 +49,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-react-constant-elements": "^7.14.5",
+    "@babel/plugin-transform-react-inline-elements": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.8",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/runtime": "^7.14.8",
+    "@svgr/webpack": "^5.5.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "url-loader": "^4.1.1"
   }
 }

@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import { instanceOf } from 'prop-types';
+
 import { withCookies, Cookies } from 'react-cookie';
 import CookieConsent from "react-cookie-consent";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-import { PDFDownloadLink } from '@react-pdf/renderer';
-
+import Modal from 'react-overlays/Modal';
+import styled from 'styled-components';
 
 import './App.css';
 import BookList from './components/BookList';
@@ -16,16 +18,9 @@ import MyDocument from './components/Document';
 import EventHandler from './components/EventsHandler';
 import FlipcardWithEventsHandler from './components/FlipcardWithEventsHandler';
 
-import Modal from 'react-overlays/Modal';
-import styled from 'styled-components';
-
-import Flipcard from '@kennethormandy/react-flipcard'
-import '@kennethormandy/react-flipcard/dist/Flipcard.css'
-
 let headings = require('./resources/headings.json');
 let descriptions = require('./resources/descriptions.json');
 let hardmode = require('./resources/hardmode.json');
-
 let info_text = require('./resources/info_text.json');
 
 // REFS:
@@ -39,14 +34,6 @@ let info_text = require('./resources/info_text.json');
 // https://www.npmjs.com/package/react-cookie
 
 // HEROKU: https://github.com/mars/create-react-app-buildpack#usage
-
-const Thing = ({events}) => (
-  <div {...events} style={{height: 100, background:"green"}}><button style={{height: 50,background:"white"}}>click</button></div>
-);
-
-const Invisible = ({events}) => (
-  <div {...events} className={'flipcard_cover'}></div>
-);
 
 const isChrome = !!window.chrome;
 
@@ -108,7 +95,6 @@ const InfoBox = styled(Modal)`
 
 
 class App extends Component  {
-  static whyDidYouRender = true;
 
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
@@ -206,27 +192,21 @@ class App extends Component  {
   }
 
   eventsHandler(eventType, index) {
-    // console.log(eventType);
 
     if (eventType === 'touchend_short') {
       this.addBook(index);
-      console.log(eventType);
     }
     if (eventType === 'touchend_long') {
       this.flipper(index);
-      console.log(eventType);
     }
     if (eventType === 'mouseenter' || eventType === 'pointerleave') {
       this.flipper(index);
-      console.log(eventType);
     }
     if (eventType === 'mouseleave' & (!isChrome)) {
       this.flipper(index);
-      console.log(eventType);
     }
     if (eventType === 'mousedown') {
       this.addBook(index);
-      console.log(eventType);
     }
   }
 
@@ -242,10 +222,8 @@ class App extends Component  {
     e.stopPropagation();
     e.preventDefault();
     if ((Date.now()-this.state.touch) > 150) {
-      // console.log("long - flip", Date.now(), this.state.touch, Date.now()-this.state.touch);
       this.flipper(index);
     } else {
-      // console.log("short - add book", Date.now(), this.state.touch, Date.now()-this.state.touch);
       this.addBook(index);
     }
   }
