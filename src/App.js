@@ -354,15 +354,15 @@ class App extends Component  {
           {/* https://iconmonstr.com/download-17-svg/ */}
           <PDFDownloadLink document={<MyDocument clicked={this.state.clicked} images={this.state.images} authors={this.state.authors} titles={this.state.titles}/>} fileName="BingoCard.pdf">
             {({ blob, url, loading, error }) =>
-              loading ? 'Loading document...' : <img className="download" title="download" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/>
+              loading ? 'Loading document...' : <img className="download" title="Download as a PDF" alt="Download as a PDF" src="iconmonstr-download-17.svg" onClick={e=> this.setState({clicked:true})}/>
             }
           </PDFDownloadLink>
 
           {/* https://iconmonstr.com/help-3-svg/ */}
-          <img className="help" title="help" src="iconmonstr-help-3.svg" onClick={e=> this.setState({show_help:true})}/>
+          <img className="help" title="About" src="iconmonstr-help-3.svg" alt="About" onClick={e=> this.setState({show_help:true})}/>
           
           {/* https://iconmonstr.com/info-6-svg/ */}
-          <img className="info" title="info" src="iconmonstr-info-6.svg" onClick={e=> this.setState({show_info:true})}/>
+          <img className="info" title="Challenge Info" src="iconmonstr-info-6.svg" alt="Challenge Info" onClick={e=> this.setState({show_info:true})}/>
 
 
           <CookieConsent
