@@ -333,18 +333,19 @@ class App extends Component  {
               renderBackdrop={e=><Backdrop {...e}/>}
           >
             <div>
-              <p></p>
+              <p></p><br/>
+              <span>This webapp uses cookies to record your selected challenge books.  You can change or add a new book by tapping a challenge card and searching for the book title.  If you're browsing on a mobile device, tap and hold a book cover card to flip it back over.</span> <br/>
               <span>Can't find the book you're looking for? </span> <br/>
               <span className={'line'}>Create an Open Library account and </span>
               <a className={'line'} href='https://openlibrary.org/books/add'>add</a>
-              <span className={'line'}> add it to their database. Open Library is a non-profit virtual library empowering universal access to all knowledge.</span> <br/><br/>
+              <span className={'line'}> it to their database. Open Library is a non-profit virtual library empowering universal access to all knowledge.</span> <br/><br/>
               
-              <span className={'line'}>This React Webapp was created by Emma Herbold (2021).&emsp;</span>
+              <span className={'line'}>This React Webapp was created by Emma Herbold (2021).&emsp;</span><br/>
               <a className={'line'} href="mailto:emmaherbold@mail.com">Contact</a>
               <p className={'line'}>&emsp;</p>
               <a className={'line'} href="https://github.com/eher0002/book-bingo" target="_blank">GitHub</a> <br/><br/>
               <p className={'line'}>Book information courtesy of </p>
-              <a className={'line'} href='https://openlibrary.org/'>https://openlibrary.org/</a><br/><br/>
+              <a className={'line'} href='https://openlibrary.org/'>https://openlibrary.org/</a><br/>
               
               <span>Not sponsored, they just strive for a great cause ;)</span>
             </div>
