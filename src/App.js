@@ -343,7 +343,7 @@ class App extends Component  {
               <span className={'line'}>This React Webapp was created by Emma Herbold (2021).&emsp;</span><br/>
               <a className={'line'} href="mailto:emmaherbold@mail.com">Contact</a>
               <p className={'line'}>&emsp;</p>
-              <a className={'line'} href="https://github.com/eher0002/book-bingo" target="_blank">GitHub</a> <br/><br/>
+              <a className={'line'} href="https://github.com/thym38/book-bingo" target="_blank">GitHub</a> <br/><br/>
               <p className={'line'}>Book information courtesy of </p>
               <a className={'line'} href='https://openlibrary.org/'>https://openlibrary.org/</a><br/>
               
