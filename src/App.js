@@ -321,7 +321,7 @@ class App extends Component  {
               <h2>Bingo Rules</h2>
               {info_text.map(line => {return (<p>{line}</p>)})}
               <span className={'line'}>Visit the </span>
-              <a className={'line'} href="https://www.reddit.com/r/Fantasy/comments/mhz2tt/official_rfantasy_2021_book_bingo_challenge/" target="_blank">r/fantasy</a>
+              <a className={'line'} href="https://www.reddit.com/r/Fantasy/comments/ttrev1/official_rfantasy_2022_book_bingo_challenge/" target="_blank">r/fantasy</a>
               <span className={'line'}> challenge page for more information.</span> <br/><br/>
             </div>
           </InfoBox>

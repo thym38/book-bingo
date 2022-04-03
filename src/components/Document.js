@@ -100,7 +100,7 @@ const MyDocument = ({clicked, images, authors, titles}) => {
             {/* <Image style={styles.banner} src='https://styles.redditmedia.com/t5_2qknd/styles/bannerBackgroundImage_ea8oj3m43q101.jpg'/> */}
 
                 <Image style={styles.logo} src='https://i.imgur.com/IDNH5yu.jpg'/>
-                <Text style={styles.title}>r/Fantasy Book Bingo Challenge 2021</Text> 
+                <Text style={styles.title}>r/Fantasy Book Bingo Challenge 2022</Text> 
             </View>
             
             
